@@ -1,0 +1,278 @@
+Public Function HTML() As String
+    Dim window_x As Integer, window_y As Integer
+    window_x = Round(MAXWIDTH())
+    window_y = Round(MAXHEIGHT())
+    
+    Dim htmlfilename As String, jsfilename As String, pathsfilename As String, defsfilename As String, formsfilename As String, stylesfilename As String
+    htmlfilename = ThisWorkbook.PATH & "\HTMLOffice\htmloffice.html"
+    jsfilename = ThisWorkbook.PATH & "\HTMLOffice\Temporary\script.txt"
+    pathsfilename = ThisWorkbook.PATH & "\HTMLOffice\Temporary\paths.txt"
+    defsfilename = ThisWorkbook.PATH & "\HTMLOffice\Temporary\defs.txt"
+    formsfilename = ThisWorkbook.PATH & "\HTMLOffice\Temporary\forms.txt"
+    
+    'Create Directories'
+    If Dir(ThisWorkbook.PATH & "\HTMLOffice", vbDirectory) = "" Then
+        MkDir (ThisWorkbook.PATH & "\HTMLOffice")
+    End If
+    If Dir(ThisWorkbook.PATH & "\HTMLOffice\Temporary", vbDirectory) = "" Then
+        MkDir (ThisWorkbook.PATH & "\HTMLOffice\Temporary")
+    End If
+    If Dir(ThisWorkbook.PATH & "\HTMLOffice\assets", vbDirectory) = "" Then
+        MkDir (ThisWorkbook.PATH & "\HTMLOffice\assets")
+    End If
+    If Dir(ThisWorkbook.PATH & "\HTMLOffice\Assets\img", vbDirectory) = "" Then
+        MkDir (ThisWorkbook.PATH & "\HTMLOffice\Assets\img")
+    End If
+    
+    'Create Files'
+    Open htmlfilename For Output As #1
+    Open jsfilename For Output As #2
+    Open pathsfilename For Output As #3
+    Open defsfilename For Output As #4
+    Open formsfilename For Output As #5
+    
+    'Initialize Files'
+    Print #1, "<!DOCTYPE html>"
+    Print #1, vbTab & "<head>"
+    Print #1, vbTab & vbTab & "<style>"
+    Print #1, vbTab & vbTab & vbTab & ".dropbtn {"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "background-color:#3498DB;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "color:white;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "padding:16px;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "font-size:2.5vw;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "border:none;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "text-align:center;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "cursor:pointer;"
+    Print #1, vbTab & vbTab & vbTab & "}"
+    Print #1, vbTab & vbTab & vbTab & ".dropbtn:hover, .dropbtn:focus {"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "background-color:#2980B9;"
+    Print #1, vbTab & vbTab & vbTab & "}"
+    Print #1, vbTab & vbTab & vbTab & ".dropdown {"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "position:relative;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "display:inline-block;"
+    Print #1, vbTab & vbTab & vbTab & "}"
+    Print #1, vbTab & vbTab & vbTab & ".dropdown-content {"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "display:none;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "position:absolute;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "background-color:#f1f1f1;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "min-width:160px;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "z-index:1;"
+    Print #1, vbTab & vbTab & vbTab & "}"
+    Print #1, vbTab & vbTab & vbTab & ".dropdown-content .a {"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "color:black;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "padding:12px 16px;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "text-decoration:none;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "display:block;"
+    Print #1, vbTab & vbTab & vbTab & "}"
+    Print #1, vbTab & vbTab & vbTab & ".dropdown-content .a:hover {"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "background-color:#ddd;"
+    Print #1, vbTab & vbTab & vbTab & "}"
+    Print #1, vbTab & vbTab & vbTab & ".show {"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "display:block;"
+    Print #1, vbTab & vbTab & vbTab & vbTab & "cursor:pointer;"
+    Print #1, vbTab & vbTab & vbTab & "}"
+    Print #1, vbTab & vbTab & "</style>"
+    Print #1, vbTab & "</head>"
+    Print #1, vbTab & "<body>"
+    Print #2, vbTab & "<script type=""text/javascript"">"
+    Print #2, vbTab & vbTab & vbTab & "function opendrop(dropdownid) {"
+    Print #2, vbTab & vbTab & vbTab & vbTab & "document.getElementById(dropdownid).classList.toggle('show');"
+    Print #2, vbTab & vbTab & vbTab & "}"
+    Print #2, vbTab & vbTab & vbTab & "function setdrop(dropdownid,newvalue) {"
+    Print #2, vbTab & vbTab & vbTab & vbTab & "document.getElementById(dropdownid).innerHTML = newvalue;"
+    Print #2, vbTab & vbTab & vbTab & "}"
+    Print #2, vbTab & vbTab & vbTab & "window.onclick = function(event) {"
+    Print #2, vbTab & vbTab & vbTab & vbTab & "if (!event.target.matches('.dropbtn')) {"
+    Print #2, vbTab & vbTab & vbTab & vbTab & vbTab & "var dropdowns = document.getElementsByClassName(""dropdown-content"");"
+    Print #2, vbTab & vbTab & vbTab & vbTab & vbTab & "var i;"
+    Print #2, vbTab & vbTab & vbTab & vbTab & vbTab & "for (i = 0;i < dropdowns.length; i++) {"
+    Print #2, vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & "var openDropdown = dropdowns[i];"
+    Print #2, vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & "if (openDropdown.classList.contains('show')) {"
+    Print #2, vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & "openDropdown.classList.remove('show');"
+    Print #2, vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & "}"
+    Print #2, vbTab & vbTab & vbTab & vbTab & vbTab & "}"
+    Print #2, vbTab & vbTab & vbTab & vbTab & "}"
+    Print #2, vbTab & vbTab & vbTab & "}"
+    Print #2, vbTab & vbTab & vbTab & "function submitform() {"
+    Print #3, vbTab & vbTab & "<svg viewBox=""0 0 " & window_x & " " & window_y & """ style=""position:absolute;left:0vw;top:0vw;width:100vw;"">"
+    Print #4, vbTab & vbTab & vbTab & "<defs>"
+    Print #5, vbTab & vbTab & "<form style=""position:absolute;left:0vw;top:0vw;width:100vw;"">"
+    
+    'Go through shapes'
+    'Types: freeform=5, autoshape=1, textarea=17, group=6'
+    Dim currentline As String
+    Dim currentlinecount As Integer
+    Dim currentlineiterator As Integer
+    Dim currentfill As String
+    Dim currentparent As Integer
+    Dim currentchild As Integer
+    Dim currentid As Integer
+    Dim parentcount As Integer
+    Dim childcount As Integer
+    Dim currentlabel As String
+    Dim currentformelement As String
+    parentcount = ActiveSheet.Shapes.Count
+    currentparent = 1
+    currentid = 1
+    While currentparent <= parentcount
+        'Freeform or Autoshape To SVG'
+        If ActiveSheet.Shapes(currentparent).Type = 5 Or ActiveSheet.Shapes(currentparent).Type = 1 Then
+            currentline = vbTab & vbTab & vbTab & "<path d=""" & PATHDATA(currentparent, 0) & """ fill="""
+            currentfill = FILLDATA(currentparent, 0, currentid)
+            If Left(currentfill, 1) = "#" Or currentfill = "none" Then
+                currentline = currentline & currentfill & """ "
+            Else
+                currentline = currentline & "url(#fill" & currentid & ")"" "
+                currentid = currentid + 1
+                Print #4, vbTab & vbTab & vbTab & vbTab & Replace(Replace(currentfill, "><", ">" & vbNewLine & vbTab & vbTab & vbTab & vbTab & "<"), "<stop", vbTab & "<stop")
+            End If
+            currentline = currentline & LINEDATA(currentparent, 0) & "/>"
+            Print #3, currentline
+        End If
+        'Text Area To Form'
+        If ActiveSheet.Shapes(currentparent).Type = 17 Then
+            currentlabel = "Label"
+            currentfill = FILLDATA(currentparent, 0, currentid)
+            If Left(currentfill, 1) = "#" Then
+                currentfill = "background-color:" & currentfill & ";"
+            Else
+                currentfill = ""
+            End If
+            'setting additional div styles'
+            currentformelement = ""
+            If ActiveSheet.Shapes(currentparent).TextFrame.Characters.Font.Bold Then
+                currentformelement = currentformelement & "font-weight:bold;"
+            End If
+            If ActiveSheet.Shapes(currentparent).TextFrame.Characters.Font.Italic Then
+                currentformelement = currentformelement & "font-style:italic;"
+            End If
+            currentformelement = currentformelement & "font-size:" & Round(0.35 * ActiveSheet.Shapes(currentparent).TextFrame.Characters.Font.Size) & "vw;"
+            Print #5, vbTab & vbTab & vbTab & "<div style=""border-radius:10px;position:absolute;left:" & Round(100 * ActiveSheet.Shapes(currentparent).Left / window_x) & "vw;right:" & Round(100 * (window_x - ActiveSheet.Shapes(currentparent).Left - ActiveSheet.Shapes(currentparent).Width) / window_x) & "vw;top:" & Round(100 * ActiveSheet.Shapes(currentparent).Top / window_x) & "vw;" & currentfill & currentformelement & """>"
+            'Go through this line by line'
+            For Each nexttext In Split(ActiveSheet.Shapes(currentparent).TextFrame.Characters.Text, vbLf)
+                If Len(nexttext) > 1 Then
+                    currentformelement = Replace(Replace(Replace(Replace(Replace(Replace(nexttext, """", ""), "[]", ""), "()", ""), ":", ""), ">", ""), "<", "")
+                    If Left(nexttext, 2) = "[]" Then
+                        'checkbox'
+                        Print #5, vbTab & vbTab & vbTab & vbTab & "<input type=""checkbox"" id=""form" & currentid & """ name=""form" & currentid & """ value=""" & Replace(currentformelement, " ", "") & """ style=""width:" & Round(0.25 * ActiveSheet.Shapes(currentparent).TextFrame.Characters.Font.Size) & "vw;height:" & Round(0.25 * ActiveSheet.Shapes(currentparent).TextFrame.Characters.Font.Size) & "vw;"">"
+                        Print #5, vbTab & vbTab & vbTab & vbTab & "<label for=""form" & currentid & """>" & currentformelement & "</label><br>"
+                        currentid = currentid + 1
+                    Else
+                        If Left(nexttext, 2) = "()" Then
+                            'radio button'
+                            Print #5, vbTab & vbTab & vbTab & vbTab & "<input type=""radio"" id=""form" & currentid & """ name=""" & currentlabel & """ value=""" & Replace(currentformelement, " ", "") & """ style=""width:" & Round(0.25 * ActiveSheet.Shapes(currentparent).TextFrame.Characters.Font.Size) & "vw;height:" & Round(0.25 * ActiveSheet.Shapes(currentparent).TextFrame.Characters.Font.Size) & "vw;"">"
+                            Print #5, vbTab & vbTab & vbTab & vbTab & "<label for=""form" & currentid & """>"; currentformelement & "</label><br>"
+                            currentid = currentid + 1
+                        Else
+                            If Right(nexttext, 1) = ":" Then
+                                'text input'
+                                Print #5, vbTab & vbTab & vbTab & vbTab & "<br><input type=""text"" id=""form" & currentid & """ value="""" style=""width:90%;margin-left:4%;font-size:" & Round(0.25 * ActiveSheet.Shapes(currentparent).TextFrame.Characters.Font.Size) & "vw;"" placeholder=""" & currentformelement & """><br><br>"
+                                currentid = currentid + 1
+                            Else
+                                If Left(nexttext, 1) = "[" And Right(nexttext, 1) = "]" Then
+                                    currentformelement = Replace(Replace(currentformelement, "[", ""), "]", "")
+                                    Print #5, vbTab & vbTab & vbTab & vbTab & "<input type=""submit"" onclick=""submitform()"" value=""" & currentformelement & """ id=""form" & currentid & """ style=""width:10vw;margin-left:4%;height:5vw;font-size:3vw;"">"
+                                    currentid = currentid + 1
+                                Else
+                                    If Right(currentformelement, 1) = "}" And InStr(1, currentformelement, "{") > 0 Then
+                                        'dropdown'
+                                        Print #5, vbTab & vbTab & vbTab & vbTab & "<div class=""dropdown"" style=""margin-left:4%;width:10vw;"">"
+                                        Print #5, vbTab & vbTab & vbTab & vbTab & vbTab & "<div id=""form" & currentid & "a"" onclick=""opendrop('form" & currentid & "')"" class=""dropbtn"" class=""dropbtn"">" & Left(currentformelement, InStr(1, currentformelement, "{") - 1) & "</div>"
+                                        Print #5, vbTab & vbTab & vbTab & vbTab & vbTab & "<div id=""form" & currentid & """ class=""dropdown-content"" style=""max-height:15vw;overflow:scroll;"">"
+                                        For Each nextlistitem In Split(Mid(currentformelement, InStr(1, currentformelement, "{") + 1, Len(currentformelement) - InStr(1, currentformelement, "{") - 1), "|")
+                                            Print #5, vbTab & vbTab & vbTab & vbTab & vbTab & vbTab & "<div class=""a"" onclick=""setdrop('form" & currentid & "a','" & nextlistitem & "')"">" & nextlistitem & "</div>"
+                                        Next
+                                        Print #5, vbTab & vbTab & vbTab & vbTab & vbTab & "</div>"
+                                        Print #5, vbTab & vbTab & vbTab & vbTab & "</div><br><br>"
+                                        currentid = currentid + 1
+                                    Else
+                                        'label'
+                                        Print #5, vbTab & vbTab & vbTab & vbTab & "<p>" & currentformelement & "</p>"
+                                        currentlabel = Replace(currentformelement, " ", "")
+                                    End If
+                                End If
+                            End If
+                        End If
+                    End If
+                End If
+            Next
+            Print #5, vbTab & vbTab & vbTab & "</div>"
+        End If
+        'Group To SVG Or Form'
+        If ActiveSheet.Shapes(currentparent).Type = 6 Then
+            
+        End If
+        currentparent = currentparent + 1
+    Wend
+    
+    'Finish And Close Files'
+    Dim textline As String
+    Print #4, vbTab & vbTab & vbTab & "</defs>"
+    Close #4
+    Open defsfilename For Input As #6
+    Do Until EOF(6)
+        Line Input #6, textline
+        Print #3, textline
+    Loop
+    Close #6
+    Print #3, vbTab & vbTab & "</svg>"
+    Close #3
+    Open pathsfilename For Input As #7
+    Do Until EOF(7)
+        Line Input #7, textline
+        Print #1, textline
+    Loop
+    Close #7
+    Print #5, vbTab & vbTab & "</form>"
+    Close #5
+    Open formsfilename For Input As #8
+    Do Until EOF(8)
+        Line Input #8, textline
+        Print #1, textline
+    Loop
+    Close #8
+    Print #2, vbTab & vbTab & vbTab & "}"
+    Print #2, vbTab & "</script>"
+    Close #2
+    Open jsfilename For Input As #10
+    Do Until EOF(10)
+        Line Input #10, textline
+        Print #1, textline
+    Loop
+    Close #10
+    Print #1, vbTab & "</body>"
+    Print #1, "</html>"
+    Close #1
+    HTML = htmlfilename
+End Function
+
+Public Function MAXWIDTH() As Double
+    Dim max_X As Double, child_count As Integer, current_value As Double
+    max_X = 0
+    min_margin = 100
+    child_count = ActiveSheet.Shapes.Count
+    While child_count > 0
+        current_value = ActiveSheet.Shapes(child_count).Left
+        If current_value < min_margin Then min_margin = current_value
+        current_value = current_value + ActiveSheet.Shapes(child_count).Width
+        If current_value > max_X Then max_X = current_value
+        child_count = child_count - 1
+    Wend
+    MAXWIDTH = Round(max_X + min_margin)
+End Function
+
+Public Function MAXHEIGHT() As Double
+    Dim max_X As Double, child_count As Integer, current_value As Double
+    max_Y = 0
+    min_margin = 100
+    child_count = ActiveSheet.Shapes.Count
+    While child_count > 0
+        current_value = ActiveSheet.Shapes(child_count).Top
+        If current_value < min_margin Then min_margin = current_value
+        current_value = current_value + ActiveSheet.Shapes(child_count).Height
+        If current_value > max_Y Then max_Y = current_value
+        child_count = child_count - 1
+    Wend
+    MAXHEIGHT = Round(max_Y + min_margin)
+End Function
